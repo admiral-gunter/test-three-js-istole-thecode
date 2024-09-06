@@ -1,0 +1,105 @@
+!DOCTYPE html
+html lang=en
+head
+    meta charset=UTF-8
+    meta name=viewport content=width=device-width, initial-scale=1.0
+    titleSurreal Liminal Spacetitle
+    style
+        body { margin 0; overflow hidden; }
+        canvas { display block; }
+        #info {
+            position absolute;
+            top 10px;
+            width 100%;
+            text-align center;
+            color white;
+            font-family Arial, sans-serif;
+            pointer-events none;
+        }
+    style
+head
+body
+   
+    script src=httpscdnjs.cloudflare.comajaxlibsthree.jsr128three.min.jsscript
+    script
+        let scene, camera, renderer, objects = [];
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth  window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+             Add a surreal, hazy background
+            scene.background = new THREE.Color(0x000000);
+            scene.fog = new THREE.FogExp2(0x110066, 0.05);
+
+             Create multiple random objects
+            for (let i = 0; i  100; i++) {
+                let geometry, material;
+                switch (Math.floor(Math.random()  3)) {
+                    case 0
+                        geometry = new THREE.BoxGeometry();
+                        break;
+             
+            
+                }
+                material = new THREE.MeshPhongMaterial({
+                    color Math.random()  0xffffff,
+                    transparent true,
+                    opacity Math.random()  0.5 + 0.25
+                });
+                let object = new THREE.Mesh(geometry, material);
+                object.position.set(
+                    Math.random()  20 - 10,
+                    Math.random()  20 - 10,
+                    Math.random()  20 - 10
+                );
+                objects.push(object);
+                scene.add(object);
+            }
+
+             Add ambient and point lights
+            const ambientLight = new THREE.AmbientLight(0x404040);
+            scene.add(ambientLight);
+            const pointLight = new THREE.PointLight(0xffffff, 1, 100);
+            pointLight.position.set(10, 10, 10);
+            scene.add(pointLight);
+
+            camera.position.z = 5;
+
+            document.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function onMouseMove(event) {
+            const mouseX = (event.clientX  window.innerWidth)  2 - 1;
+            const mouseY = -(event.clientY  window.innerHeight)  2 + 1;
+            camera.position.x = mouseX  2;
+            camera.position.y = mouseY  2;
+            camera.lookAt(scene.position);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth  window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            objects.forEach(object = {
+                object.rotation.x += 0.01;
+                object.rotation.y += 0.01;
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        init();
+        animate();
+    script
+body
+html
